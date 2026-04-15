@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hungry Phonics Monsters (Scary-Cute Edition!)</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif; /* Kid-friendly fonts */
+            background-color: #1a1a2e; /* Dark, exciting background */
+            color: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding-bottom: 50px;
+        }
+
+        h1 { margin-top: 15px; color: #f1c40f; text-shadow: 2px 2px 4px #000; }
+        .intro-p { font-size: 1.2rem; max-width: 600px; text-align: center; margin-bottom: 30px;}
+
+        .game-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 1200px;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .team-section {
+            flex: 1;
+            background: #16213e; /* Darker navy for boxes */
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            border: 6px solid;
+            transition: all 0.3s ease;
+        }
+
+        .team-a { border-color: #9b59b6; } /* Purple monster theme */
+        .team-b { border-color: #2ecc71; } /* Green monster theme */
+
+        h2 { margin-top: 0; text-shadow: 1px 1px 2px #000;}
+        .team-a h2 { color: #d0aae0; }
+        .team-b h2 { color: #a2f2c4; }
+
+        /* CSS CSS CSS CSS MONSTERS CSS CSS CSS CSS */
+        /* This creates the "Scary-Cute" visual without external images */
+
+        .monster-stage {
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .monster-body {
+            width: 150px;
+            height: 150px;
+            border-radius: 50% 50% 40% 40%;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+        }
+
+        /* Monster A: Purple and Spiky */
+        #monster-0 .monster-body { 
+            background: #8e44ad; 
+            border: 5px solid #6c3483;
+        }
+
+        /* Monster B: Green and Spotted */
+        #monster-1 .monster-body { 
+            background: #27ae60; 
+            border: 5px solid #1e8449;
+            background-image: radial-gradient(#1e8449 20%, transparent 20%);
+            background-size: 20px 20px;
+        }
+
+        /* The Big Eye */
+        .eye {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 30px;
+            left: 40px;
+            border: 4px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transition: all 0.1s ease;
+        }
+        .pupil {
+            width: 30px;
+            height: 30px;
+            background: #333;
+            border-radius: 50%;
+            transition: all 0.1s ease;
+        }
+
+        /* The Mouth (default) */
+        .mouth {
+            width: 60px;
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            position: absolute;
+            bottom: 30px;
+            left: 45px;
+            transition: all 0.2s ease;
+        }
+
+        /* Cute small horns */
+        .horn {
+            width: 20px;
+            height: 40px;
+            background: #bdc3c7;
+            position: absolute;
+            top: -20px;
+            border-radius: 10px 10px 0 0;
+            border: 3px solid #7f8c8d;
+        }
+        .horn-l { left: 40px; transform: rotate(-15deg); }
+        .horn-r { right: 40px; transform: rotate(15deg); }
+
+        /* MONSTER STATES (Classes added by JavaScript) */
+
+        /* Angry/Wrong: Shaking and Mean */
+        .monster-body.angry { animation: shake 0.3s; }
+        .monster-body.angry .eye { transform: scaleY(0.5); background: #f1c40f; } /* Narrowed, yellowish eye */
+        .monster-body.angry .mouth {
+            height: 40px;
+            background: transparent;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 40px solid #c0392b; /* Angry red frown */
+            border-radius: 0;
+            bottom: 20px;
+        }
+
+        /* Sleeping/Win: Closed eye, soft mouth */
+        .monster-body.sleeping { opacity: 0.8; }
+        .monster-body.sleeping .eye { height: 10px; top: 60px; background: #333;} /* Closed eyelid */
+        .monster-body.sleeping .pupil { display: none; }
+        .monster-body.sleeping .mouth { width: 30px; left: 60px; bottom: 35px; border-radius: 15px 15px 0 0;} /* Small "o" mouth */
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            50% { transform: translate(-1px, -1px) rotate(1deg); }
+            70% { transform: translate(-3px, 1px) rotate(-1deg); }
+            100% { transform: translate(1px, -2px) rotate(0deg); }
+        }
+
+        /* END CSS MONSTERS */
+
+        .status-box {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            min-height: 1.4em;
+        }
+
+        .lives { color: #e74c3c; font-size: 2.2rem; letter-spacing: 5px; margin-bottom: 10px; text-shadow: 0 0 10px #e74c3c;}
+        .score { color: #2ecc71; font-size: 1.5rem; font-weight: bold; text-shadow: 0 0 5px #2ecc71; margin-bottom: 20px;}
+
+        .word-plate-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .plate {
+            background: #bdc3c7; /* Light gray plates */
+            color: #2c3e50;
+            border: 4px solid #fff;
+            border-radius: 50px;
+            padding: 18px 10px;
+            cursor: pointer;
+            font-size: 28px;
+            font-weight: bold;
+            box-shadow: 0 5px 0 #95a5a6;
+            transition: all 0.1s;
+        }
+
+        .plate:hover { background: #ecf0f1; transform: translateY(-3px);}
+        .plate:active { transform: translateY(3px); box-shadow: 0 2px 0 #95a5a6;}
+
+        .controls { margin-top: 15px; }
+
+        button.listen-btn {
+            background: #f1c40f;
+            color: #333;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #f39c12;
+        }
+        button.listen-btn:hover { background: #f39c12; }
+        button.listen-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #f39c12; }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>👾 Hungry Phonics Monsters 👾</h1>
+    <p class="intro-p">Listen carefully, Team! Choose the right word to feed your monster. If you get 3 wrong, the monster gets SO hungry it will EAT YOU! If you get 3 right, it will fall asleep!</p>
+
+    <div class="game-container">
+        <div class="team-section team-a" id="section-0">
+            <h2>Team A (Short -i-)</h2>
+            <div class="status-box" id="status-0" style="color: #d0aae0;">Grumble... Feed me...</div>
+            
+            <div class="monster-stage">
+                <div id="monster-0" class="monster-body">
+                    <div class="horn horn-l"></div>
+                    <div class="horn horn-r"></div>
+                    <div class="eye"><div class="pupil"></div></div>
+                    <div class="mouth"></div>
+                </div>
+            </div>
+
+            <div class="lives" id="lives-0">❤️❤️❤️</div>
+            <div class="score">Yummy Points: <span id="score-0">0</span>/3</div>
+            <div class="controls">
+                <button class="listen-btn" onclick="speakTarget(0)">🔊 Listen!</button>
+            </div>
+            <div class="word-plate-container" id="plates-0"></div>
+        </div>
+
+        <div class="team-section team-b" id="section-1">
+            <h2>Team B (Long i_e)</h2>
+            <div class="status-box" id="status-1" style="color: #a2f2c4;">Roar! I need food!</div>
+            
+            <div class="monster-stage">
+                <div id="monster-1" class="monster-body">
+                    <div class="horn horn-l"></div>
+                    <div class="horn horn-r"></div>
+                    <div class="eye"><div class="pupil"></div></div>
+                    <div class="mouth"></div>
+                </div>
+            </div>
+
+            <div class="lives" id="lives-1">❤️❤️❤️</div>
+            <div class="score">Yummy Points: <span id="score-1">0</span>/3</div>
+            <div class="controls">
+                <button class="listen-btn" onclick="speakTarget(1)">🔊 Listen!</button>
+            </div>
+            <div class="word-plate-container" id="plates-1"></div>
+        </div>
+    </div>
+
+    <div id="game-over" class="overlay">
+        <h1 id="over-msg" style="font-size: 3rem; color: #e74c3c;">GAME OVER</h1>
+        <button onclick="location.reload()" style="padding: 15px 30px; font-size: 24px; cursor: pointer; border-radius: 10px;">Play Again?</button>
+    </div>
+
+    <script>
+        const wordPairs = [
+            { short: 'kit', long: 'kite' },
+            { short: 'bit', long: 'bike' },
+            { short: 'rid', long: 'ride' },
+            { short: 'hit', long: 'hike' },
+            { short: 'fin', long: 'fine' },
+            { short: 'win', long: 'wine' },
+            { short: 'dim', long: 'dime' },
+            { short: 'rip', long: 'ripe' }
+        ];
+
+        let gameState = [
+            { score: 0, lives: 3, currentWord: '', targetType: 'short' },
+            { score: 0, lives: 3, currentWord: '', targetType: 'long' }
+        ];
+
+        function initTurn(teamIndex) {
+            // Re-center eye/pupil (if they were offset for 'look')
+            const pupil = document.querySelector(`#monster-${teamIndex} .pupil`);
+            pupil.style.transform = 'translate(0,0)';
+
+            const container = document.getElementById(`plates-${teamIndex}`);
+            container.innerHTML = '';
+            
+            // Pick a random pair
+            const pair = wordPairs[Math.floor(Math.random() * wordPairs.length)];
+            const options = [pair.short, pair.long];
+            
+            // Randomize target for this turn
+            gameState[teamIndex].currentWord = options[Math.floor(Math.random() * 2)];
+            
+            // Shuffle buttons (Fisher-Yates style simple shuffle)
+            options.sort(() => Math.random() - 0.5);
+
+            options.forEach(word => {
+                const btn = document.createElement('div');
+                btn.className = 'plate';
+                btn.innerText = word;
+                btn.onclick = () => checkAnswer(teamIndex, word);
+                container.appendChild(btn);
+            });
+        }
+
+        function speakTarget(teamIndex) {
+            const wordToSay = gameState[teamIndex].currentWord;
+            if (!wordToSay) return;
+
+            // Make the monster 'look' at the button when clicked
+            const pupil = document.querySelector(`#monster-${teamIndex} .pupil`);
+            pupil.style.transform = 'translate(0, 10px)'; // Look down
+
+            const msg = new SpeechSynthesisUtterance(wordToSay);
+            msg.lang = 'en-US';
+            msg.rate = 0.7; // Slower for clarity
+            msg.pitch = 1.2; // Slightly higher/cuter
+            window.speechSynthesis.speak(msg);
+        }
+
+        function checkAnswer(teamIndex, selected) {
+            const monsterBody = document.getElementById(`monster-${teamIndex}`);
+            const status = document.getElementById(`status-${teamIndex}`);
+
+            // Important: Block clicks if monster is already angry or sleeping (prevent spamming)
+            if (monsterBody.classList.contains('angry') || monsterBody.classList.contains('sleeping')) return;
+
+            if (selected === gameState[teamIndex].currentWord) {
+                // CORRECT
+                gameState[teamIndex].score++;
+                document.getElementById(`score-${teamIndex}`).innerText = gameState[teamIndex].score;
+                
+                if (gameState[teamIndex].score >= 3) {
+                    // WIN STATE (Sleeping)
+                    monsterBody.classList.add('sleeping');
+                    status.innerText = 'Zzz... Full... Zzz...';
+                    status.style.color = '#3498db';
+                    document.getElementById(`lives-${teamIndex}`).innerText = '😴💤';
+                    // Check if other team still playing, or declare winner later
+                } else {
+                    // HAPPY FEEDBACK
+                    status.innerText = 'OM NOM NOM! Yummy!';
+                    status.style.color = '#2ecc71';
+                    
+                    // Brief visual feedback, then next word
+                    setTimeout(() => {
+                        status.innerText = 'More! I need MORE!';
+                        status.style.color = teamIndex === 0 ? '#d0aae0' : '#a2f2c4';
+                        initTurn(teamIndex);
+                    }, 1200);
+                }
+            } else {
+                // WRONG
+                gameState[teamIndex].lives--;
+                updateLives(teamIndex);
+                monsterBody.classList.add('angry'); // Trigger shake/angry eye/frown
+                
+                if (gameState[teamIndex].lives <= 0) {
+                    // LOSE STATE (Ate Team)
+                    status.innerText = 'GRRR! CHOMP! I ATE YOU!';
+                    status.style.color = '#e74c3c';
+                    endGame(`Team ${teamIndex === 0 ? 'A' : 'B'} was eaten! Oh no!`);
+                } else {
+                    // ANGRY FEEDBACK
+                    status.innerText = 'WRONG! ME GETTING ANGRY!';
+                    status.style.color = '#f39c12';
+                    
+                    // Let anger linger, then reset to normal/hungry
+                    setTimeout(() => {
+                        monsterBody.classList.remove('angry');
+                        status.innerText = 'GIVE ME THE RIGHT FOOD!';
+                        status.style.color = teamIndex === 0 ? '#d0aae0' : '#a2f2c4';
+                        initTurn(teamIndex);
+                    }, 2000);
+                }
+            }
+        }
+
+        function updateLives(teamIndex) {
+            const livesDisplay = document.getElementById(`lives-${teamIndex}`);
+            let heartString = '';
+            for(let i=0; i<3; i++) {
+                if(i < gameState[teamIndex].lives) {
+                    heartString += '❤️'; // Filled heart
+                } else {
+                    heartString += '🖤'; // Empty heart
+                }
+            }
+            livesDisplay.innerText = heartString;
+        }
+
+        function endGame(msg) {
+            // Short delay so they see the final status
+            setTimeout(() => {
+                document.getElementById('game-over').style.display = 'flex';
+                document.getElementById('over-msg').innerText = msg;
+            }, 1000);
+        }
+
+        // Start game
+        initTurn(0);
+        initTurn(1);
+    </script>
+</body>
+</html>
